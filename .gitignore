@@ -1,0 +1,47 @@
+# Log files
+*.log
+logs/
+*.tmp
+
+# Backup files
+backups/
+*.backup
+*.bak
+
+# VM files (too large for git)
+*.vmdk
+*.vdi
+*.qcow2
+*.vhd
+*.iso
+*.ova
+*.ovf
+
+# ESXi specific
+*.vmx
+*.vmxf
+*.nvram
+*.vmss
+*.vmem
+
+# Sensitive files
+configs/*/passwords.txt
+configs/*/secrets/
+**/private-keys/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.temp

@@ -1,0 +1,62 @@
+!
+! Cisco 2901 Router Configuration for ESXi Home Lab
+! Author: rejohn1988
+!
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname LAB-RTR-2901
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+no aaa new-model
+!
+ip cef
+no ipv6 cef
+!
+! Interface for Windows Infrastructure (ESXi Host 1)
+interface GigabitEthernet0/0
+ description ESXi Host 1 - Windows Infrastructure
+ ip address 192.168.40.1 255.255.255.0
+ duplex auto
+ speed auto
+ no shutdown
+!
+! Interface for Linux Infrastructure (ESXi Host 2)
+interface GigabitEthernet0/1
+ description ESXi Host 2 - Linux Infrastructure
+ ip address 192.168.50.1 255.255.255.0
+ duplex auto
+ speed auto
+ no shutdown
+!
+! Access Control Lists
+access-list 100 permit ip 192.168.40.0 0.0.0.255 192.168.50.0 0.0.0.255
+access-list 100 permit ip 192.168.50.0 0.0.0.255 192.168.40.0 0.0.0.255
+access-list 100 permit tcp any any eq 80
+access-list 100 permit tcp any any eq 443
+access-list 100 permit tcp any any eq 22
+access-list 100 permit tcp any any eq 3389
+access-list 100 permit icmp any any
+access-list 100 deny ip any any log
+!
+! SSH Configuration
+ip domain-name homelab.local
+username admin privilege 15 secret $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+crypto key generate rsa general-keys modulus 2048
+!
+line con 0
+ logging synchronous
+ login local
+line vty 0 4
+ login local
+ transport input ssh
+!
+! SNMP
+snmp-server community homelab-public RO
+snmp-server location "Home Lab"
+snmp-server contact "rejohn1988"
+!
+end
